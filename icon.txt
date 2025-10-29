@@ -1,0 +1,17 @@
+Icon Requirements for Thunderstore:
+- Size: 256x256 pixels
+- Format: PNG
+- File name: icon.png
+
+Place your icon.png file in this directory before packaging.
+
+You can create an icon using:
+- Photoshop/GIMP
+- Online icon generators
+- AI image generators
+- Game screenshots with editing
+
+Suggested icon content:
+- GTFO artifact/booster imagery
+- UI representation
+- Custom badge/emblem design

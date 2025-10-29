@@ -1,0 +1,9 @@
+{
+  "name": "GTFO_Artifact_Generator",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/yourusername/GTFO_ArtifactGenerator",
+  "description": "Host-only in-game UI for creating custom Artifact Boosters. Press F6 to mix and match effects, conditions, and templates!",
+  "dependencies": [
+    "BepInEx-BepInExPack_IL2CPP-6.0.0"
+  ]
+}

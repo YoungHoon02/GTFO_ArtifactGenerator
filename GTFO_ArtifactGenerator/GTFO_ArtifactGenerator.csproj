@@ -1,0 +1,114 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <!-- BepInEx NuGet Packages -->
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+  </ItemGroup>
+
+  <!-- IL2CPP Interop Runtime -->
+  <ItemGroup>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(BepInExPath)\core\Il2CppInterop.Runtime.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Common">
+      <HintPath>$(BepInExPath)\core\Il2CppInterop.Common.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- IL2CPP Core Libraries -->
+  <ItemGroup>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(DummyDllsPath)\Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppSystem">
+      <HintPath>$(DummyDllsPath)\Il2CppSystem.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppSystem.Core">
+      <HintPath>$(DummyDllsPath)\Il2CppSystem.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Unity Engine DummyDlls (IMGUI only) -->
+  <ItemGroup>
+    <Reference Include="UnityEngine">
+      <HintPath>$(DummyDllsPath)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(DummyDllsPath)\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(DummyDllsPath)\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(DummyDllsPath)\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(DummyDllsPath)\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- GTFO Game Assemblies (split into multiple ASM files) -->
+  <ItemGroup>
+    <!-- Core game modules needed for BoosterImplants -->
+    <Reference Include="Modules-ASM">
+      <HintPath>$(DummyDllsPath)\Modules-ASM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Utils-ASM">
+      <HintPath>$(DummyDllsPath)\Utils-ASM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="GUIX-ASM">
+      <HintPath>$(DummyDllsPath)\GUIX-ASM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Plugins-ASM">
+      <HintPath>$(DummyDllsPath)\Plugins-ASM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="SNet_ASM">
+      <HintPath>$(DummyDllsPath)\SNet_ASM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="GlobalFramework-ASM">
+      <HintPath>$(DummyDllsPath)\GlobalFramework-ASM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DropServerSDK-ASM">
+      <HintPath>$(DummyDllsPath)\DropServerSDK-ASM.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Post-build: Copy to BepInEx plugins folder -->
+  <Target Name="CopyToPlugins" AfterTargets="Build">
+    <PropertyGroup>
+      <PluginDir>$(BepInExPath)\plugins\$(ProjectName)</PluginDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(PluginDir)" Condition="!Exists('$(PluginDir)')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginDir)" />
+    <Message Text="Copied $(TargetFileName) to $(PluginDir)" Importance="high" />
+  </Target>
+
+</Project>

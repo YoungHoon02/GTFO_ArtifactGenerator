@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/SteamLibrary/steamapps/common/GTFO/**)",
+      "Read(//c/Users/YoungHoon02/AppData/Roaming/r2modmanPlus-local/GTFO/profiles/buildtest/BepInEx/**)",
+      "Bash(dotnet build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

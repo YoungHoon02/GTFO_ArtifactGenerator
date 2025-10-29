@@ -45,3 +45,8 @@ Thumbs.db
 # User-specific files
 *.swp
 *~
+.claude/
+PACKAGE_GUIDE.md
+
+# Build configuration with personal paths
+Directory.Build.props

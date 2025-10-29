@@ -5,7 +5,7 @@ using Il2CppInterop.Runtime.Injection;
 
 namespace GTFO_ArtifactGenerator
 {
-    [BepInPlugin("YoungHoon02.GTFO_ArtifactGenerator", "GTFO Artifact Generator", "1.0.0")]
+    [BepInPlugin("GTFO_ArtifactGenerator", "GTFO Artifact Generator", "1.0.0")]
     public class Plugin : BasePlugin
     {
         private Harmony _harmony = null!;

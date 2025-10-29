@@ -91,7 +91,25 @@ namespace GTFO_ArtifactGenerator
         {
             try
             {
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                logger.LogInfo($"Searching for type: {typeName}");
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                logger.LogInfo($"Total assemblies loaded: {assemblies.Length}");
+
+                // List all assemblies for debugging
+                foreach (var asm in assemblies)
+                {
+                    try
+                    {
+                        var name = asm.GetName().Name;
+                        if (name.Contains("Booster") || name.Contains("DropServer") || name.Contains("GameData"))
+                        {
+                            logger.LogInfo($"  Assembly: {name}");
+                        }
+                    }
+                    catch { }
+                }
+
+                foreach (var assembly in assemblies)
                 {
                     try
                     {
@@ -99,12 +117,23 @@ namespace GTFO_ArtifactGenerator
                         if (type != null)
                         {
                             logger.LogInfo($"Found {typeName} in {assembly.GetName().Name}");
+                            logger.LogInfo($"  Type FullName: {type.FullName}");
+                            logger.LogInfo($"  Type Namespace: {type.Namespace}");
+                            logger.LogInfo($"  Type IsEnum: {type.IsEnum}");
+                            logger.LogInfo($"  Type IsClass: {type.IsClass}");
+                            logger.LogInfo($"  Type IsValueType: {type.IsValueType}");
+
                             var map = BuildIdMap(type, logger);
                             return map;
                         }
                     }
-                    catch (System.Reflection.ReflectionTypeLoadException) { }
+                    catch (System.Reflection.ReflectionTypeLoadException ex)
+                    {
+                        logger.LogDebug($"ReflectionTypeLoadException in {assembly.GetName().Name}: {ex.Message}");
+                    }
                 }
+
+                logger.LogWarning($"Type {typeName} not found in any loaded assembly!");
             }
             catch (Exception ex)
             {
@@ -466,6 +495,16 @@ namespace GTFO_ArtifactGenerator
                 var fields = t.GetFields(flags);
                 logger.LogInfo($"Type {t.Name} has {fields.Length} static fields");
 
+                // Log field names even if they're not uint
+                if (fields.Length > 0)
+                {
+                    logger.LogInfo($"  All static fields in {t.Name}:");
+                    foreach (var f in fields)
+                    {
+                        logger.LogInfo($"    - {f.Name}: {f.FieldType.Name} (IsStatic: {f.IsStatic})");
+                    }
+                }
+
                 foreach (var f in fields)
                 {
                     if (TryAddField(f, map, logger))
@@ -474,16 +513,33 @@ namespace GTFO_ArtifactGenerator
                     }
                 }
 
+                // Also try with NonPublic flag in case they're internal
+                var allFlags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic |
+                              System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.FlattenHierarchy;
+                var allFields = t.GetFields(allFlags);
+                if (allFields.Length > fields.Length)
+                {
+                    logger.LogInfo($"Type {t.Name} has {allFields.Length} total static fields (including non-public)");
+                    foreach (var f in allFields)
+                    {
+                        if (!fields.Contains(f))
+                        {
+                            logger.LogInfo($"    - [NonPublic] {f.Name}: {f.FieldType.Name}");
+                            TryAddField(f, map, logger);
+                        }
+                    }
+                }
+
                 // If no fields found, check nested types (common in GTFO)
                 if (map.Count == 0)
                 {
-                    var nestedTypes = t.GetNestedTypes(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                    var nestedTypes = t.GetNestedTypes(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
                     logger.LogInfo($"Type {t.Name} has {nestedTypes.Length} nested types");
 
                     foreach (var nested in nestedTypes)
                     {
-                        logger.LogInfo($"  Checking nested type: {nested.Name}");
-                        var nestedFields = nested.GetFields(flags);
+                        logger.LogInfo($"  Checking nested type: {nested.Name} (IsEnum: {nested.IsEnum})");
+                        var nestedFields = nested.GetFields(allFlags);
                         logger.LogInfo($"    Found {nestedFields.Length} static fields in {nested.Name}");
 
                         foreach (var f in nestedFields)
@@ -501,6 +557,7 @@ namespace GTFO_ArtifactGenerator
             catch (Exception ex)
             {
                 logger.LogError($"Failed to build map for {t.Name}: {ex.Message}");
+                logger.LogError($"  Stack trace: {ex.StackTrace}");
             }
 
             return map;

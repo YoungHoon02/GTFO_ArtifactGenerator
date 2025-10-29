@@ -27,7 +27,7 @@ Press **F6** to open the in-game UI, select effects, conditions, and template, t
 
 ### Option 2: Manual Installation
 
-1. Download the latest release from [Releases](https://github.com/yourusername/GTFO_ArtifactGenerator/releases)
+1. Download the latest release from [Releases](https://github.com/YoungHoon02/GTFO_ArtifactGenerator/releases)
 2. Extract `GTFO_ArtifactGenerator.dll` to:
    ```
    [GTFO Install]/BepInEx/plugins/GTFO_ArtifactGenerator/
@@ -144,13 +144,13 @@ Set how many times the booster can be used (1-3)
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/GTFO_ArtifactGenerator.git
+   git clone https://github.com/YoungHoon02/GTFO_ArtifactGenerator.git
    cd GTFO_ArtifactGenerator
    ```
 
 2. **Configure paths** (edit `Directory.Build.props`)
    ```xml
-   <GTFOPath>D:\SteamLibrary\steamapps\common\GTFO</GTFOPath>
+   <GTFOPath>C:\SteamLibrary\steamapps\common\GTFO</GTFOPath>
    <R2ModManProfile>C:\Users\YourName\AppData\Roaming\r2modmanPlus-local\GTFO\profiles\Default</R2ModManProfile>
    ```
 
@@ -270,6 +270,5 @@ This project is provided for educational and modding purposes.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/GTFO_ArtifactGenerator/issues)
-- **Discord**: [GTFO Modding Discord](https://discord.gg/gtfo-modding)
+- **Issues**: [GitHub Issues](https://github.com/YoungHoon02/GTFO_ArtifactGenerator/issues)
 - **Thunderstore**: [GTFO Artifact Generator](https://thunderstore.io/c/gtfo/p/yourusername/GTFOArtifactGenerator/)
